@@ -1,0 +1,67 @@
+from news.models import *
+
+u1 = User.objects.create_user(username='Jane')
+u2 = User.objects.create_user(username='Serg')
+
+a1=Author.objects.create(author_user=u1)
+a2=Author.objects.create(author_user=u2)
+
+c1=Category.objects.create(topic='Про Соню')
+c2=Category.objects.create(topic='Про Сосновый бор')
+c3=Category.objects.create(topic='Про Новый год')
+c4=Category.objects.create(topic='Про каникулы')
+
+p1=Post.objects.create(author=a1,type='AR',title='Как соня драла елку', text='Соня съела весь дождик')
+p2=Post.objects.create(author=a2,type='AR',title='Зимний лес', text='Весь сосновый бор был укутан снежным блестящим покровом, словно одеялом')
+p3=Post.objects.create(author=a2,type='NW',title='Празднование', text='Встречая 2023,мы легли спать в 4 утра под голубой огонек')
+
+
+p1.topics.add(c1)
+p1.topics.add(c2)
+p2.topics.add(c3)
+p3.topics.add(c3)
+p3.topics.add(c4)
+
+
+Post.objects.all().value
+
+ct1= Comment.objects.create(post_comment=p1,user_comment=u1, text_comment='Вредная кошка')
+ct2= Comment.objects.create(post_comment=p2,user_comment=u1, text_comment='Как было красиво, как в сказке!')
+ct3= Comment.objects.create(post_comment=p3,user_comment=u2, text_comment='Зато много танцевали и вкусно поели')
+ct4= Comment.objects.create(post_comment=p3,user_comment=u1, text_comment='Погода была плохая,но праздник состоялся')
+
+ct1.like()
+ct2.like()
+ct3.like()
+ct4.like()
+ct1.dislike()
+ct3.dislike()
+
+ct1.rating_comment - посмотреть рейтинг комментария 
+
+
+p1.dislike()
+p2.like()
+p3.like()
+
+p1.rating_article - посмотреть рейтинг комментария 
+
+
+a1.update_rating()
+a2.update_rating()
+
+best_a = Author.objects.all().order_by('-rating_author').values('author_user', 'rating_author')[0]
+print(best_a)
+
+bestp = Post.objects.all().order_by('-rating_article')[:1]
+for i in bestp:
+	i.rating_article
+	i.title
+        i.time_in
+        i.author.author_user
+        i.preview()
+
+bestPostCom = Comment.objects.filter(post_comment=2)
+bestPostCom.values("time_in_comment", "user_comment", "user_comment", "text_comment")
+
+
